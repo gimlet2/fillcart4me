@@ -1,1 +1,9 @@
-<p>It's a home page</p>
+
+<% if (!everyauth.loggedIn) { %>
+<a href="/auth/google">Login with Google</a>
+
+<% } else { %>
+
+<p><%= everyauth.google.user.id %></p>
+<a href="/logout">logout</a>
+<% } %>

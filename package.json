@@ -1,5 +1,5 @@
 {
-    "name": "application-name"
+    "name": "consuming"
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {
@@ -7,5 +7,6 @@
     , "ejs": "*"
     , "mongoose": "*"
     , "connect-form": "*"
+    , "passport-openid": "*"
   }
 }
