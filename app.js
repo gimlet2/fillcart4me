@@ -135,7 +135,7 @@ everyone.now.getShopList = function(id) {
 		var connectId = unescape(this.user.cookie['connect.sid']);
 		var clientId = this.user.clientId;
 		sessionStore.load(connectId, function(err, res) {
-			group = now.getGroup(res.auth.google.user.id);
+			group = now.getGroup(id);
 			group.hasClient(connectId, function (bool) {
 				if (!bool) {
 			    	group.addUser(clientId);
@@ -150,7 +150,7 @@ everyone.now.addItem = function(id, name) {
 		var connectId = unescape(this.user.cookie['connect.sid']);
 		var clientId = this.user.clientId;
 		sessionStore.load( connectId, function(err, res) {
-			group = now.getGroup(res.auth.google.user.id);
+			group = now.getGroup(id);
 			group.hasClient(connectId, function (bool) {
   				if (!bool) {
 				    group.addUser(clientId);
@@ -167,7 +167,7 @@ everyone.now.deleteItem = function(id, name) {
 		var connectId = unescape(this.user.cookie['connect.sid']);
 		var clientId = this.user.clientId;
 		sessionStore.load(connectId, function(err, res) {
-		group = now.getGroup(res.auth.google.user.id);
+		group = now.getGroup(id);
 		group.hasClient(connectId, function (bool) {
 			if (!bool) {
 			    group.addUser(clientId);
@@ -182,7 +182,7 @@ everyone.now.buyItem = function(id, name) {
 		var connectId = unescape(this.user.cookie['connect.sid']);
 		var clientId = this.user.clientId;
 		sessionStore.load(connectId, function(err, res) {
-		group = now.getGroup(res.auth.google.user.id);
+		group = now.getGroup(id);
 		group.hasClient(connectId, function (bool) {
 			if (!bool) {
 			    group.addUser(clientId);
@@ -192,6 +192,38 @@ everyone.now.buyItem = function(id, name) {
 		});	
 }
 
+everyone.now.addCoOwner = function(id, name) {
+		var a = this.now;
+		var connectId = unescape(this.user.cookie['connect.sid']);
+		var clientId = this.user.clientId;
+		sessionStore.load( connectId, function(err, res) {
+			group = now.getGroup(id);
+			group.hasClient(connectId, function (bool) {
+  				if (!bool) {
+				    group.addUser(clientId);
+			    }
+			});
+			
+			routes.addCoOwner(res.auth, id, name, group.now);
+		});	
 
-app.listen(3000);
+}
+
+everyone.now.deleteCoOwner = function(id, name) {
+		var a = this.now;
+		var connectId = unescape(this.user.cookie['connect.sid']);
+		var clientId = this.user.clientId;
+		sessionStore.load(connectId, function(err, res) {
+		group = now.getGroup(id);
+		group.hasClient(connectId, function (bool) {
+			if (!bool) {
+			    group.addUser(clientId);
+		    }
+		});
+		routes.deleteCoOwner(res.auth, id, name, group.now);
+		});	
+}
+
+
+app.listen(8080);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

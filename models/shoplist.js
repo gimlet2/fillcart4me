@@ -10,6 +10,7 @@ var ShopList = exports = module.exports = new Schema({
 	_id		 : ObjectId
   , name     : String
   , owner	 : String
+  , coOwners : [String]
   , items	 : [Item]
 });
 
@@ -18,15 +19,17 @@ var ShopListModel = exports.model  = mongoose.model('ShopList', ShopList);
 
 
 exports.get = function(id, ownerId, fn){
-  ShopListModel.find({owner: ownerId, _id: id}, function(err, doc) {
+  ShopListModel.find({$or:[{owner: ownerId},{ coOwners: { $in: [ownerId] }}], _id: id}, function(err, doc) {
 		checkError(err, doc, function() {fn(doc[0]);});
 	});
 };
 
 exports.getAll = function(id, fn) {
-	ShopListModel.find({owner: id}, function(err, doc) {
+	var query = ShopListModel.find({ $or:[{owner: id},{ coOwners: { $in: [id] }}] });
+	query.exec(function(err, doc) {
 		checkError(err, doc, fn);
 	});
+	//ShopListModel.find({owner: id}, 
 }
 
 checkError = function(err, doc, fn) {
@@ -78,6 +81,7 @@ exports.addItem = function(everyauth, id, itemName, fn) {
 
 }
 
+
 exports.deleteItem = function(everyauth, listId, id, fn) {
 	console.log(listId);
 	exports.get(listId, everyauth.google.user.id, function(shopList) {
@@ -113,3 +117,41 @@ exports.buyItem = function(everyauth, listId, id, fn) {
 	});
 
 }
+
+exports.addCoOwner = function(everyauth, id, name, fn) {
+
+	exports.get(id, everyauth.google.user.id, function(shopList) {
+		if(shopList == null) {
+			console.log('shopList not found');
+		} else {
+			shopList.coOwners.push(name);
+			shopList.save(function(err) {
+				checkError(err, null, function() {
+					fn(shopList);
+				});
+			});
+
+		}
+	});
+
+}
+
+
+exports.deleteCoOwner = function(everyauth, listId, id, fn) {
+	console.log(listId);
+	exports.get(listId, everyauth.google.user.id, function(shopList) {
+		if(shopList == null) {
+			console.log('shopList not found');
+		} else {
+			shopList.coOwners.remove(id);
+			shopList.save(function(err) {
+				checkError(err, null, function() {
+					fn(shopList);
+				});
+			});
+
+		}
+	});
+
+}
+

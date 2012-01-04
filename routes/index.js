@@ -42,3 +42,11 @@ exports.deleteItem = function(everyauth, listId, id, now) {
 exports.buyItem = function(everyauth, listId, id, now) {
 		shopList.buyItem(everyauth,listId, id, now.displayPollItemsData);
 }
+
+exports.addCoOwner = function(everyauth, id, itemName, now) {
+		shopList.addCoOwner(everyauth, id, itemName, now.displayPollItemsData);
+}
+
+exports.deleteCoOwner = function(everyauth, listId, id, now) {
+		shopList.deleteCoOwner(everyauth,listId, id, now.displayPollItemsData);
+}
