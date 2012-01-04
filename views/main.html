@@ -2,19 +2,29 @@
 <html>
 <head>
 	<title>Smart Consuming - <%= title %></title>
-	<link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+
+
+	<link rel="stylesheet" href="/stylesheets/bootstrap.min.css"  type="text/css">
 	<link href="/stylesheets/style.css"  rel="stylesheet" type="text/css"/>
+    <script src="/nowjs/now.js" type="text/javascript"></script>
 	<script src="/javascripts/jquery.min.js" type="text/javascript"></script>
 	<script src="/javascripts/bootstrap-buttons.js" type="text/javascript"></script>
-    <script src="/nowjs/now.js"></script>
+
     <script src="/javascripts/ejs.min.js"></script>
-    <script id="shopLi" type="text/template">
+    <script id="shopList" type="text/template">
       {{ if (shopLists != null && shopLists.length) { }}
-        <ul>
+		<table class="bordered-table" style="width: 500px;">
+
           {{ shopLists.forEach(function(shopList){ }}
-            <li>{{= shopList.name }}</li>
+			<tr>	
+				<td>{{= shopList.name }}</td>
+            	<td style="width: 160px; text-align: center;">
+            	<a href="#" class="btn primary">Go shop</a>
+		        <a href="#" class="btn" data-loading-text="deleting..." onclick="deleteList(this, '{{= shopList._id }}');">Delete</a>
+            	</td>
+            </li>
           {{ }) }}
-        </ul>
+	</table>
       {{ } }}
     </script>
 
@@ -23,16 +33,34 @@
 			$('#addShopListButton').button('loading');
 			now.addShopList($('#xlInput').val());
 			$('#addShopListButton').button('reset');
+			$('#xlInput').val("");
 		}
 		
 		now.displayPollData = function(list) {
-			var shop = document.getElementById('shopLi').innerHTML;
+			
+			var shop = document.getElementById('shopList').innerHTML;
 			var ejs = require('ejs');
 			ejs.open = '{{';
 			ejs.close = '}}';
 			var html = ejs.render(shop, { shopLists: list });
 			$("#lists").html(html);
 		}
+		
+		function deleteList(button, id) {
+			$(this).button('loading');
+			now.deleteShopList(id);
+			$(this).button('reset');
+		}
+		
+		now.ready(function() {
+			<% if (!everyauth.loggedIn) { %>
+				
+			<% } else { %>
+				
+				now.addShopList("aasas");
+				now.getShopLists();
+			<% } %>	
+			});
 	
 	</script>
 </head>

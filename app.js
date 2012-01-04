@@ -93,6 +93,25 @@ everyone.now.addShopList = function(name) {
 
 }
 
+everyone.now.deleteShopList = function(name) {
+		var a = this.now;
+		console.log( unescape(this.user.cookie['connect.sid']));
+		sessionStore.load( unescape(this.user.cookie['connect.sid']), function(err, res) {
+			console.log(err);
+			routes.deleteShopList(res.auth, name, a);
+		});	
+}
+
+everyone.now.getShopLists = function() {
+		var a = this.now;
+		console.log( unescape(this.user.cookie['connect.sid']));
+		sessionStore.load( unescape(this.user.cookie['connect.sid']), function(err, res) {
+			console.log(err);
+			routes.getShopLists(res.auth, a);
+		});	
+}
+
+
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 

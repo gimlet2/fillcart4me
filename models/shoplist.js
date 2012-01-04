@@ -50,6 +50,14 @@ exports.create = function(everyauth, name, fn) {
 			});
 		});
 }
+
+exports.delete = function(everyauth, id, fn) {
+	var query = ShopListModel.find({});
+	query.where('_id', id).where('owner', everyauth.google.user.id).remove(function() {
+		exports.getAll(everyauth.google.user.id, fn);
+	});
+
+}
 /*
 exports.addPhoto = function(albumId, filename, file, res) {
 

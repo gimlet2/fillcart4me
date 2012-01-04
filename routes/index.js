@@ -16,6 +16,13 @@ exports.about = function(req, res){
 };
 
 exports.addShopList = function(everyauth, shopListName, now) {
-		console.log('add');
 		shopList.create(everyauth, shopListName, now.displayPollData);
+}
+
+exports.deleteShopList = function(everyauth, id, now) {
+		shopList.delete(everyauth, id, now.displayPollData);
+}
+
+exports.getShopLists = function(everyauth, now) {
+		shopList.getAll(everyauth.google.user.id, now.displayPollData);
 }
