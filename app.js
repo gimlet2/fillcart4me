@@ -5,7 +5,9 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , everyauth = require('everyauth');
+  , everyauth = require('everyauth')
+  , now = require("now")
+  ;
 
 everyauth.debug = true;
 
@@ -37,12 +39,15 @@ everyauth.google
   })
   .redirectPath('/');	
 
+var sessionSecret = 'GFTYUrtyfygfT^&**uyhgiugiuyg67fyt';
+var sessionStore = new express.session.MemoryStore;
 
 var app = module.exports = express.createServer(
 	express.cookieParser(),
-	express.session({ secret: 'GFTYUrtyfygfT^&**uyhgiugiuyg67fyt' })
+	express.session({ secret: sessionSecret, store: sessionStore  })
 	);
-	
+var everyone = now.initialize(app);	
+
 app.register('html', require('ejs'));
 
 app.configure(function(){
@@ -63,9 +68,6 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/consuming');
 
 // Configuration
-
-
-
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
@@ -76,12 +78,22 @@ app.configure('production', function(){
 
 // Routes
 
-
-
-
 everyauth.helpExpress(app);
 
 app.get('/', routes.index);
+app.get('/about', routes.about);
+
+everyone.now.addShopList = function(name) {
+		var a = this.now;
+		console.log( unescape(this.user.cookie['connect.sid']));
+		sessionStore.load( unescape(this.user.cookie['connect.sid']), function(err, res) {
+			console.log(err);
+			routes.addShopList(res.auth, name, a);
+		});	
+
+}
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+
+

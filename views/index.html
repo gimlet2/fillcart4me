@@ -1,9 +1,17 @@
 
 <% if (!everyauth.loggedIn) { %>
-<a href="/auth/google">Login with Google</a>
+
+	<%- partial('about.html') %>  
 
 <% } else { %>
 
-<p><%= everyauth.google.user.id %></p>
-<a href="/logout">logout</a>
+		<div class="clearfix">
+            <label for="xlInput">New Shop List:&nbsp;&nbsp;</label>
+            <div class="input">
+              <input class="xlarge" id="xlInput" name="xlInput" size="30" type="text" />
+              <a href="#" id="addShopListButton" class="btn primary" data-loading-text="creating..." onclick="addShopList();">Add</a>
+            </div>
+        </div>
+        <div id="lists"></div>
+
 <% } %>

@@ -1,14 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title><%= title %></title>
-<link href="/stylesheets/style.css"  rel="stylesheet" type="text/css"/>
-<script src="/javascripts/main.js" type="text/javascript"></script>
+	<title>Smart Consuming - <%= title %></title>
+	<link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+	<link href="/stylesheets/style.css"  rel="stylesheet" type="text/css"/>
+	<script src="/javascripts/jquery.min.js" type="text/javascript"></script>
+	<script src="/javascripts/bootstrap-buttons.js" type="text/javascript"></script>
+    <script src="/nowjs/now.js"></script>
+    <script src="/javascripts/ejs.min.js"></script>
+    <script id="shopLi" type="text/template">
+      {{ if (shopLists != null && shopLists.length) { }}
+        <ul>
+          {{ shopLists.forEach(function(shopList){ }}
+            <li>{{= shopList.name }}</li>
+          {{ }) }}
+        </ul>
+      {{ } }}
+    </script>
+
+	<script type="text/javascript">
+		function addShopList() {
+			$('#addShopListButton').button('loading');
+			now.addShopList($('#xlInput').val());
+			$('#addShopListButton').button('reset');
+		}
+		
+		now.displayPollData = function(list) {
+			var shop = document.getElementById('shopLi').innerHTML;
+			var ejs = require('ejs');
+			ejs.open = '{{';
+			ejs.close = '}}';
+			var html = ejs.render(shop, { shopLists: list });
+			$("#lists").html(html);
+		}
+	
+	</script>
 </head>
 <body>
-<h1>Smart Consuming</h1>
+<div class="topbar" data-scrollspy="scrollspy" >
+      <div class="topbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Smart Consuming</a>
+          <ul class="nav">
+			<li><a href="/about">About</a></li>
+<% if (!everyauth.loggedIn) { %>
+			<li><a href="/auth/google">Login with Google</a></li>
 
-    <%- body %>
+<% } else { %>
 
+			<li><a href="#"><%= everyauth.google.user.id %></a></li>
+				<li><a href="/logout">logout</a></li>
+			<% } %>
+          </ul>
+        </div>
+      </div>
+    </div>
+<div class="container">
+
+    	<%- body %>
+</div>
 </body>
 </html>
