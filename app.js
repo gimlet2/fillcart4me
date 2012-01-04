@@ -83,36 +83,115 @@ everyauth.helpExpress(app);
 app.get('/', routes.index);
 app.get('/about', routes.about);
 
+
+
 everyone.now.addShopList = function(name) {
 		var a = this.now;
-		console.log( unescape(this.user.cookie['connect.sid']));
-		sessionStore.load( unescape(this.user.cookie['connect.sid']), function(err, res) {
-			console.log(err);
-			routes.addShopList(res.auth, name, a);
+		var connectId = unescape(this.user.cookie['connect.sid']);
+		var clientId = this.user.clientId;
+		sessionStore.load( connectId, function(err, res) {
+			group = now.getGroup(res.auth.google.user.id);
+			group.hasClient(connectId, function (bool) {
+  				if (!bool) {
+				    group.addUser(clientId);
+			    }
+			});
+			routes.addShopList(res.auth, name, group.now);
 		});	
-
 }
 
 everyone.now.deleteShopList = function(name) {
 		var a = this.now;
-		console.log( unescape(this.user.cookie['connect.sid']));
-		sessionStore.load( unescape(this.user.cookie['connect.sid']), function(err, res) {
-			console.log(err);
-			routes.deleteShopList(res.auth, name, a);
+		var connectId = unescape(this.user.cookie['connect.sid']);
+		var clientId = this.user.clientId;
+		sessionStore.load(connectId, function(err, res) {
+			
+		group = now.getGroup(res.auth.google.user.id);
+		group.hasClient(connectId, function (bool) {
+			if (!bool) {
+			    group.addUser(clientId);
+		    }
+		});
+		routes.deleteShopList(res.auth, name, group.now);
 		});	
 }
 
 everyone.now.getShopLists = function() {
+		var connectId = unescape(this.user.cookie['connect.sid']);
+		var clientId = this.user.clientId;
+		sessionStore.load(connectId, function(err, res) {
+			group = now.getGroup(res.auth.google.user.id);
+			group.hasClient(connectId, function (bool) {
+				if (!bool) {
+ 					console.log('user added');
+			    	group.addUser(clientId);
+		    	}
+			});
+			routes.getShopLists(res.auth, group.now);
+		});	
+}
+
+everyone.now.getShopList = function(id) {
+		var connectId = unescape(this.user.cookie['connect.sid']);
+		var clientId = this.user.clientId;
+		sessionStore.load(connectId, function(err, res) {
+			group = now.getGroup(res.auth.google.user.id);
+			group.hasClient(connectId, function (bool) {
+				if (!bool) {
+			    	group.addUser(clientId);
+		    	}
+			});
+			routes.getShopList(res.auth, group.now, id);
+		});	
+}
+
+everyone.now.addItem = function(id, name) {
 		var a = this.now;
-		console.log( unescape(this.user.cookie['connect.sid']));
-		sessionStore.load( unescape(this.user.cookie['connect.sid']), function(err, res) {
-			console.log(err);
-			routes.getShopLists(res.auth, a);
+		var connectId = unescape(this.user.cookie['connect.sid']);
+		var clientId = this.user.clientId;
+		sessionStore.load( connectId, function(err, res) {
+			group = now.getGroup(res.auth.google.user.id);
+			group.hasClient(connectId, function (bool) {
+  				if (!bool) {
+				    group.addUser(clientId);
+			    }
+			});
+			
+			routes.addItem(res.auth, id, name, group.now);
+		});	
+
+}
+
+everyone.now.deleteItem = function(id, name) {
+		var a = this.now;
+		var connectId = unescape(this.user.cookie['connect.sid']);
+		var clientId = this.user.clientId;
+		sessionStore.load(connectId, function(err, res) {
+		group = now.getGroup(res.auth.google.user.id);
+		group.hasClient(connectId, function (bool) {
+			if (!bool) {
+			    group.addUser(clientId);
+		    }
+		});
+		routes.deleteItem(res.auth, id, name, group.now);
+		});	
+}
+
+everyone.now.buyItem = function(id, name) {
+		var a = this.now;
+		var connectId = unescape(this.user.cookie['connect.sid']);
+		var clientId = this.user.clientId;
+		sessionStore.load(connectId, function(err, res) {
+		group = now.getGroup(res.auth.google.user.id);
+		group.hasClient(connectId, function (bool) {
+			if (!bool) {
+			    group.addUser(clientId);
+		    }
+		});
+		routes.buyItem(res.auth, id, name, group.now);
 		});	
 }
 
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
-
-

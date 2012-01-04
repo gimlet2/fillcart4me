@@ -5,11 +5,11 @@
 
 <% } else { %>
 
-		<div class="clearfix">
-            <label for="xlInput">New Shop List:&nbsp;&nbsp;</label>
-            <div class="input">
+		<div class="clearfix" style="margin-bottom: 5px;">
+            <label for="xlInput" id="newElementLabel">New Shop List:</label>
+            <div class="input">&nbsp;&nbsp;
               <input class="xlarge" id="xlInput" name="xlInput" size="30" type="text" />
-              <a href="#" id="addShopListButton" class="btn primary" data-loading-text="creating..." onclick="addShopList();">Add</a>
+              <a href="#" id="addShopListButton" class="btn primary" data-loading-text="creating...">Add</a>
             </div>
         </div>
         <div id="lists"></div>

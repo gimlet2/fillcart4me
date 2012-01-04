@@ -17,9 +17,9 @@ var ShopListModel = exports.model  = mongoose.model('ShopList', ShopList);
 
 
 
-exports.get = function(id, fn){
-  ShopListModel.findById(id, function(err, doc) {
-		checkError(err, doc, fn);
+exports.get = function(id, ownerId, fn){
+  ShopListModel.find({owner: ownerId, _id: id}, function(err, doc) {
+		checkError(err, doc, function() {fn(doc[0]);});
 	});
 };
 
@@ -41,8 +41,6 @@ checkError = function(err, doc, fn) {
 exports.create = function(everyauth, name, fn) {
 	var shopList = new ShopListModel();
 		shopList.name = name;
-
-		console.log(everyauth.google.user);
 		shopList.owner = everyauth.google.user.id;
 		shopList.save(function(err) {
 			checkError(err, null, function() {
@@ -58,28 +56,60 @@ exports.delete = function(everyauth, id, fn) {
 	});
 
 }
-/*
-exports.addPhoto = function(albumId, filename, file, res) {
 
-	exports.get(albumId, function(album) {
-		if(album == null) {
-			console.log('Album not found');
+exports.addItem = function(everyauth, id, itemName, fn) {
+
+	exports.get(id, everyauth.google.user.id, function(shopList) {
+		if(shopList == null) {
+			console.log('shopList not found');
 		} else {
-			var image = new ImageModel();
-			image.name = filename;
-			image.type = file.type;
-			image.content = fs.readFileSync(file.path);
-			if (album.images == null) {
-				album.images = {};
-			}
-			album.images.push(image);
-			album.isNew = false;
-			album.save(function(err) {
-				console.log(err);
-				res.redirect('/admin');		
+			var item = new ItemModel();
+			item.name = itemName;
+			item.isBought = false;
+			shopList.items.push(item);
+			shopList.save(function(err) {
+				checkError(err, null, function() {
+					fn(shopList);
+				});
 			});
 
 		}
 	});
 
-}*/
+}
+
+exports.deleteItem = function(everyauth, listId, id, fn) {
+	console.log(listId);
+	exports.get(listId, everyauth.google.user.id, function(shopList) {
+		if(shopList == null) {
+			console.log('shopList not found');
+		} else {
+			shopList.items.id(id).remove();
+			shopList.save(function(err) {
+				checkError(err, null, function() {
+					fn(shopList);
+				});
+			});
+
+		}
+	});
+
+}
+
+exports.buyItem = function(everyauth, listId, id, fn) {
+	console.log(listId);
+	exports.get(listId, everyauth.google.user.id, function(shopList) {
+		if(shopList == null) {
+			console.log('shopList not found');
+		} else {
+			shopList.items.id(id).isBought = true;
+			shopList.save(function(err) {
+				checkError(err, null, function() {
+					fn(shopList);
+				});
+			});
+
+		}
+	});
+
+}

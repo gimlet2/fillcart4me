@@ -5,7 +5,7 @@ var ObjectId = Schema.ObjectId;
 
 var Item = module.exports = new Schema({
 	name	 : String	
-  , type	 : String
+  , isBought : Boolean
 });
 
 var ItemModel = exports.model  = mongoose.model('Item', Item);

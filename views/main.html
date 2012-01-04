@@ -19,7 +19,7 @@
 			<tr>	
 				<td>{{= shopList.name }}</td>
             	<td style="width: 160px; text-align: center;">
-            	<a href="#" class="btn primary">Go shop</a>
+            	<a href="#" class="btn primary" data-loading-text="shopping!" onclick="goShopWithList(this, '{{= shopList._id }}', '{{= shopList.name }}');">Go shop</a>
 		        <a href="#" class="btn" data-loading-text="deleting..." onclick="deleteList(this, '{{= shopList._id }}');">Delete</a>
             	</td>
             </li>
@@ -28,21 +28,57 @@
       {{ } }}
     </script>
 
+    <script id="itemList" type="text/template">
+      {{ if (itemLists != null && itemLists.length) { }}
+		<table class="bordered-table" style="width: 500px;">
+
+          {{ itemLists.forEach(function(itemList){ }}
+			<tr>	
+				<td style="{{ if(itemList.isBought) { }} background-color: #A9DBA9; {{ } }}">{{= itemList.name }}</td>
+            	<td style="width: 160px; text-align: center;">
+            	
+            	<a href="#" class="btn primary {{ if(itemList.isBought) { }} disabled {{ } }}" data-loading-text="buing!" onclick="buyItem(this, '{{= listId }}', '{{= itemList._id }}');">Buy</a>
+            	
+		        <a href="#" class="btn" data-loading-text="deleting..." onclick="deleteItem(this, '{{= listId }}', '{{= itemList._id }}');">Delete</a>
+            	</td>
+            </li>
+          {{ }) }}
+	</table>
+      {{ } }}
+    </script>
+
 	<script type="text/javascript">
+			var ejs = require('ejs');
+			ejs.open = '{{';
+			ejs.close = '}}';	
+		
+		
+		
 		function addShopList() {
+		
 			$('#addShopListButton').button('loading');
 			now.addShopList($('#xlInput').val());
 			$('#addShopListButton').button('reset');
 			$('#xlInput').val("");
 		}
+
+		function addItemList(id) {
+			$('#addShopListButton').button('loading');
+			now.addItem(id, $("#xlInput").val());
+			$('#addShopListButton').button('reset');
+			$('#xlInput').val("");
+		}
+
 		
 		now.displayPollData = function(list) {
-			
 			var shop = document.getElementById('shopList').innerHTML;
-			var ejs = require('ejs');
-			ejs.open = '{{';
-			ejs.close = '}}';
 			var html = ejs.render(shop, { shopLists: list });
+			$("#lists").html(html);
+		}
+		
+		now.displayPollItemsData = function(list) {
+			var items = document.getElementById('itemList').innerHTML;
+			var html = ejs.render(items, { itemLists: list.items, listId: list._id });
 			$("#lists").html(html);
 		}
 		
@@ -52,13 +88,36 @@
 			$(this).button('reset');
 		}
 		
+		function deleteItem(button, listId, id) {
+			$(this).button('loading');
+			now.deleteItem(listId, id);
+			$(this).button('reset');
+		}
+		
+		function buyItem(button, listId, id) {
+			$(this).button('loading');
+			now.buyItem(listId, id);
+			$(this).button('reset');
+		}
+		
+		function goShopWithList(button, id, name) {
+			$(this).button('loading');
+			$("#shopListNameDiv").html("<h2>" + name + "</h2");
+			$("#newElementLabel").html("New item:");
+			$("#addShopListButton").unbind('click');
+			$("#addShopListButton").click(function() {
+				addItemList(id);
+			});
+			now.getShopList(id);
+			$(this).button('reset');		
+		}
+		
 		now.ready(function() {
 			<% if (!everyauth.loggedIn) { %>
 				
 			<% } else { %>
-				
-				now.addShopList("aasas");
 				now.getShopLists();
+				 $("#addShopListButton").click(addShopList);
 			<% } %>	
 			});
 	
@@ -84,7 +143,8 @@
       </div>
     </div>
 <div class="container">
-
+	<div id="shopListNameDiv">
+	</div>
     	<%- body %>
 </div>
 </body>
