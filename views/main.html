@@ -54,6 +54,7 @@
 			ejs.open = '{{';
 			ejs.close = '}}';	
 		var shopListId;
+		var initDone = false;
 		
 		
 		function addShopList() {
@@ -90,15 +91,15 @@
 		}
 		
 		function deleteList(button, id) {
-			$(this).button('loading');
+			$(button).button('loading');
 			now.deleteShopList(id);
-			$(this).button('reset');
+			$(button).button('reset');
 		}
 		
 		function deleteItem(button, listId, id) {
-			$(this).button('loading');
+			$(button).button('loading');
 			now.deleteItem(listId, id);
-			$(this).button('reset');
+			$(button).button('reset');
 		}
 		
 		function buyItem(button, listId, id) {
@@ -109,7 +110,7 @@
 		
 		function goShopWithList(button, id, name) {
 			shopListId = id;
-			$(this).button('loading');
+			$(button).button('loading');
 			$("#shopListNameDiv").html("<h2>" + name + "</h2");
 			$("#newElementLabel").html("New item:");
 			$("#coOwnersDiv").show();
@@ -118,8 +119,8 @@
 				addItemList(id);
 			});
 			now.getShopList(id);
-			$(this).button('reset');		
-			
+			$(button).button('reset');		
+			document.url = document.url + "#" + id;
 		}
 		
 		now.ready(function() {
@@ -127,8 +128,12 @@
 				
 			<% } else { %>
 				now.getShopLists();
-				 $("#addShopListButton").click(addShopList);
-				 $("#coOwners").tagsInput({onAddTag:onAddTag,onRemoveTag:onRemoveTag, defaultText: "add user"});
+				if(!initDone) {
+					initDone = true;
+			     	$("#addShopListButton").click(addShopList);
+				    $("#coOwners").tagsInput({onAddTag:onAddTag,onRemoveTag:onRemoveTag, defaultText: "add user"});
+				 }
+				 
 			<% } %>	
 			});
 			

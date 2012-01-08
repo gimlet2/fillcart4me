@@ -28,10 +28,9 @@ function addUser (source, sourceUser) {
   return user;
 }
 
-everyauth.google
-  .appId('198255835595.apps.googleusercontent.com')
-  .appSecret('gpAeYLUaZWQxklj3oe4sUPwC')
-  .scope('https://www.google.com/m8/feeds/')
+everyauth.google.scope('https://www.google.com/m8/feeds/')
+  .appId('198255835595-o7t2gcjkqna9qe093rg6462t2l2hlugr.apps.googleusercontent.com')
+  .appSecret('0ibrNhrLb5D27bOMzVXH3YFG')
   .findOrCreateUser( function (sess, accessToken, extra, googleUser) {
     googleUser.refreshToken = extra.refresh_token;
     googleUser.expiresIn = extra.expires_in;
@@ -70,10 +69,14 @@ mongoose.connect('mongodb://localhost/consuming');
 // Configuration
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+  everyauth.google.appId('198255835595-o7t2gcjkqna9qe093rg6462t2l2hlugr.apps.googleusercontent.com')
+  .appSecret('0ibrNhrLb5D27bOMzVXH3YFG')
 });
 
 app.configure('production', function(){
   app.use(express.errorHandler()); 
+    everyauth.google.appId('198255835595.apps.googleusercontent.com')
+  .appSecret('gpAeYLUaZWQxklj3oe4sUPwC')
 });
 
 // Routes
@@ -225,5 +228,5 @@ everyone.now.deleteCoOwner = function(id, name) {
 }
 
 
-app.listen(8080);
+app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
