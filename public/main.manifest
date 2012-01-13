@@ -1,6 +1,13 @@
-CACHE MANIFEST
+#CACHE MANIFEST
 
-CACHE:
-javascripts/*
-stylesheets/*
-*
+#stylesheets/bootstrap.min.css
+#stylesheets/style.css
+#stylesheets/jquerytagsinput.css
+#nowjs/now.js
+#javascripts/jquery.min.js
+#javascripts/bootstrap-buttons.js
+#javascripts/jquerytagsinput.js
+#javascripts/ejs.min.js
+
+#/
+
