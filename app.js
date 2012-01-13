@@ -40,7 +40,6 @@ everyauth.google.scope('https://www.google.com/m8/feeds/')
   .redirectPath('/');	
 
 
-
 var sessionSecret = 'GFTYUrtyfygfT^&**uyhgiugiuyg67fyt';
 var sessionStore = new express.session.MemoryStore;
 
