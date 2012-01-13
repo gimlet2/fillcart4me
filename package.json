@@ -8,6 +8,6 @@
     , "mongoose": "*"
     , "connect-form": "*"
     , "now": "*"
-    , "everyauth": "*"
+    , "everyauth": "0.2.27"
   }
 }
