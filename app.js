@@ -71,7 +71,6 @@ app.configure(function(){
 });
 
 
-
 // DB
 
 var mongoose = require('mongoose');
