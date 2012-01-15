@@ -86,7 +86,7 @@ app.configure('development', function(){
 app.configure('production', function(){
   app.use(express.errorHandler()); 
     everyauth.google.appId('198255835595.apps.googleusercontent.com')
-  .appSecret('gpAeYLUaZWQxklj3oe4sUPwC')
+  .appSecret('gpAeYLUaZWQxklj3oe4sUPwC').myHostname("fillcart4.me")
 });
 
 // Routes
