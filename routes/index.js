@@ -7,8 +7,13 @@ var shopList = require('../models/shoplist.js');
 exports.index = function(req, res){
 	if(req.session.auth && req.session.auth.loggedIn) {
   		req.session.userId = req.session.auth.google.user.id;
-	  }
-  res.render('index.html', { title: 'Main', layout: 'main' })
+		shopList.getAll(req.session.userId, function() {
+  			res.render('index.html', { title: 'Main', layout: 'main' });
+  		});
+
+	} else {
+		res.render('index.html', { title: 'Main', layout: 'main' });
+  	}
 };
 
 exports.about = function(req, res){

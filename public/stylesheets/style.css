@@ -1,5 +1,8 @@
 body {
-  padding-top: 150px;
+	padding-top: 150px;
+}
+
+html {
 
 }
 
@@ -11,4 +14,19 @@ body {
 	width: 540px;
 	height: 30px;
 }
+
+.promoText p{
+	font-size: 15pt;
+	line-height: 24pt;
+}
+
+.promoBig {
+	font-size: 17pt;
+}
+
+.footer {
+	margin-top: 180px;
+	height: 30px;
+}
+
 
