@@ -9,6 +9,7 @@
     <script src="/nowjs/now.js" type="text/javascript"></script>
 	<script src="/javascripts/jquery.min.js" type="text/javascript"></script>
 	<script src="/javascripts/bootstrap-buttons.js" type="text/javascript"></script>
+	<script src="/javascripts/bootstrap-alerts.js" type="text/javascript"></script>
 	<script src="/javascripts/jquerytagsinput.js" type="text/javascript"></script>
     <script src="/javascripts/ejs.min.js"></script>
     <script id="shopList" type="text/template">
@@ -125,14 +126,15 @@
 			<% if (!everyauth.loggedIn) { %>
 				
 			<% } else { %>
-				now.getShopLists();
+
 				if(!initDone) {
 					initDone = true;
 			     	$("#addShopListButton").click(addShopList);
 			     	$("#xlInput").keypress(function(e) {onEnterPress(e, addShopList);});
 				    $("#coOwners").tagsInput({onAddTag:onAddTag,onRemoveTag:onRemoveTag, defaultText: "add user"});
+				    $().alert();
 				 }
-				 
+  				callWithWaitNotice(now.getShopLists);				 
 			<% } %>	
 			});
 			
@@ -150,6 +152,12 @@
 				call();
 				$(e.target).focus();
 			}
+		}
+		
+		function callWithWaitNotice(f) {
+			$("#loadingInfo").alert();
+			f();
+			$("#loadingInfo").alert('close');
 		}
 		
 		window.addEventListener('load', function(e) {
@@ -191,10 +199,19 @@
       </div>
     </div>
 <div class="container">
+<div style="width: 0px; height: 0px;">
+<div id="loadingInfo" class="alert-message warning fade in" data-alert="alert">
+  <a class="close" href="#">×</a>
+  <p><strong>Loading...</strong> Please be patient.</p>
+</div>
+</div>
 	<div id="shopListNameDiv">
 	</div>
     	<%- body %>
 </div>
+
+
+
 <script type="text/javascript">
 
   var _gaq = _gaq || [];

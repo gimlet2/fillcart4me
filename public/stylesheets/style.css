@@ -7,4 +7,8 @@ body {
 	font-size: 18pt;
 }
 
+#loadingInfo {
+	width: 540px;
+	height: 30px;
+}
 
