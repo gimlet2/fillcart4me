@@ -25,7 +25,7 @@ exports.get = function(id, ownerId, fn){
 };
 
 exports.getAll = function(id, fn) {
-	var query = ShopListModel.find({ $or:[{owner: id},{ coOwners: { $in: [id] }}] });
+	var query = ShopListModel.find({ $or:[{owner: id},{ coOwners: { $in: [id] }}] },['_id', 'name', 'owner']);
 	query.exec(function(err, doc) {
 		checkError(err, doc, fn);
 	});
