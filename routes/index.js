@@ -4,11 +4,13 @@
  */
 var shopList = require('../models/shoplist.js');
 
+
 exports.index = function(req, res){
 	if(req.session.auth && req.session.auth.loggedIn) {
   		req.session.userId = req.session.auth.google.user.id;
+  		
 		shopList.getAll(req.session.userId, function() {
-  			res.render('index.html', { title: 'Main', layout: 'main' });
+  			res.render('index.html', { title: 'Main', layout: 'main'  });
   		});
 
 	} else {

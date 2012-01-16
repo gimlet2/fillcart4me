@@ -13,43 +13,16 @@
 	<script src="/javascripts/jquerytagsinput.js" type="text/javascript"></script>
     <script src="/javascripts/ejs.min.js"></script>
     <script id="shopList" type="text/template">
-      {{ if (shopLists != null && shopLists.length) { }}
-		<table class="bordered-table" style="width: 500px;">
-
-          {{ shopLists.forEach(function(shopList){ }}
-			<tr>	
-				<td>{{= shopList.name }}</td>
-            	<td style="width: 160px; text-align: center;">
-            	<a href="#" class="btn primary" data-loading-text="shopping!" onclick="goShopWithList(this, '{{= shopList._id }}', '{{= shopList.name }}');">Go shop</a>
-		        <a href="#" class="btn" data-loading-text="deleting..." onclick="deleteList(this, '{{= shopList._id }}');">Delete</a>
-            	</td>
-            </li>
-          {{ }) }}
-	</table>
-      {{ } }}
+    		<%- partial('list.ejs') %>  
     </script>
-    <script id="itemList" type="text/template">
-      {{ if (itemLists != null && itemLists.length) { }}
-		<table class="bordered-table" style="width: 500px;">
-
-          {{ itemLists.forEach(function(itemList){ }}
-			<tr>	
-				<td style="{{ if(itemList.isBought) { }} background-color: #A9DBA9; {{ } }}">{{= itemList.name }}</td>
-            	<td style="width: 160px; text-align: center;">
-            	
-            	<a href="#" class="btn primary {{ if(itemList.isBought) { }} disabled {{ } }}" data-loading-text="buing!" onclick="buyItem(this, '{{= listId }}', '{{= itemList._id }}');">Buy</a>
-            	
-		        <a href="#" class="btn" data-loading-text="deleting..." onclick="deleteItem(this, '{{= listId }}', '{{= itemList._id }}');">Delete</a>
-            	</td>
-            </li>
-          {{ }) }}
-	</table>
-      {{ } }}
+    <script id="itemList" type="text/template" src="/templates/items.ejs">
+    		<%- partial('items.ejs') %>      
     </script>
 	<script type="text/javascript">
 			var ejs = require('ejs');
 			ejs.open = '{{';
 			ejs.close = '}}';	
+			var shop;
 		var shopListId;
 		var initDone = false;
 		function addShopList() {
@@ -68,8 +41,8 @@
 
 		
 		now.displayPollData = function(list) {
-			var shop = document.getElementById('shopList').innerHTML;
-			var html = ejs.render(shop, { shopLists: list });
+		    var shop = document.getElementById('shopList').innerHTML;
+		    var html = ejs.render(shop, { shopLists: list });
 			$("#lists").html(html);
 		}
 		
