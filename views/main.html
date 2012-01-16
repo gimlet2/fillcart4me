@@ -107,10 +107,15 @@
 			$("#shopListNameDiv").html("<h2>" + name + "</h2");
 			$("#newElementLabel").html("New item:");
 			$("#coOwnersDiv").show();
-			$("#addShopListButton").unbind('click');
-			$("#addShopListButton").click(function() {
+			$("#addShopListButton").unbind('click').click(function() {
 				addItemList(id);
 			});
+			$("#xlInput").unbind('keypress').bind('keypress', function(e) {
+				onEnterPress(e, function() {
+						addItemList(id);
+					});
+				}
+			);
 			now.getShopList(id);
 			$(button).button('reset');		
 			document.url = document.url + "#" + id;
@@ -124,6 +129,7 @@
 				if(!initDone) {
 					initDone = true;
 			     	$("#addShopListButton").click(addShopList);
+			     	$("#xlInput").keypress(function(e) {onEnterPress(e, addShopList);});
 				    $("#coOwners").tagsInput({onAddTag:onAddTag,onRemoveTag:onRemoveTag, defaultText: "add user"});
 				 }
 				 
@@ -137,6 +143,13 @@
 		}
 		function onRemoveTag(tag) {
 			now.deleteCoOwner(shopListId, tag);
+		}
+		
+		function onEnterPress(e, call) {
+			if (e.keyCode == 13) {
+				call();
+				$(e.target).focus();
+			}
 		}
 		
 		window.addEventListener('load', function(e) {
@@ -162,11 +175,11 @@
 <div class="topbar" data-scrollspy="scrollspy" >
       <div class="topbar-inner">
         <div class="container">
-          <a class="brand" href="/">Fill Cart For Me</a>
+          <a class="brand" href="/"><img src="/images/logo.png"/></a>
           <ul class="nav">
 			<li><a href="/about">About</a></li>
 <% if (!everyauth.loggedIn) { %>
-			<li><a href="/auth/google">Login with Google</a></li>
+			<li class="importantMenu"><a href="/auth/google">Login with Google</a></li>
 
 <% } else { %>
 
