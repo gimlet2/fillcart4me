@@ -124,7 +124,7 @@
 		
 		now.ready(function() {
 			<% if (!everyauth.loggedIn) { %>
-				
+				$().alert();
 			<% } else { %>
 
 				if(!initDone) {
