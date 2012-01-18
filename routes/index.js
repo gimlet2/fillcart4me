@@ -21,38 +21,38 @@ exports.about = function(req, res) {
     res.render('about.html', { title: 'About', layout: 'main' })
 };
 
-exports.addShopList = function(everyauth, shopListName, now) {
+exports.addShopList = function(everyauth, now, shopListName) {
     shopList.createShopList(everyauth.google.user.id, shopListName, now.displayPollData);
 }
 
-exports.deleteShopList = function(everyauth, id, now) {
-    shopList.deleteShopList(everyauth.google.user.id, id, now.displayPollData);
+exports.deleteShopList = function(everyauth, now, shopListId) {
+    shopList.deleteShopList(everyauth.google.user.id, shopListId, now.displayPollData);
 }
 
 exports.getShopLists = function(everyauth, now) {
     shopList.getShopListsForUser(everyauth.google.user.id, now.displayPollData);
 }
 
-exports.getShopList = function(everyauth, now, id) {
-    shopList.getShopList(everyauth.google.user.id, id, now.displayPollItemsData, now.displayPollData);
+exports.getShopList = function(everyauth, now, shopListId) {
+    shopList.getShopList(everyauth.google.user.id, shopListId, now.displayPollItemsData, now.displayPollData);
 }
 
-exports.addItem = function(everyauth, id, itemName, now) {
-    shopList.addItemToShopList(everyauth.google.user.id, id, itemName, now.displayPollItemsData);
+exports.addItem = function(everyauth, now, shopListId, itemName) {
+    shopList.addItemToShopList(everyauth.google.user.id, shopListId, itemName, now.displayPollItemsData);
 }
 
-exports.deleteItem = function(everyauth, listId, id, now) {
-    shopList.deleteItemFromShopList(everyauth.google.user.id, listId, id, now.displayPollItemsData);
+exports.deleteItem = function(everyauth, now, shopListId, itemId) {
+    shopList.deleteItemFromShopList(everyauth.google.user.id, shopListId, itemId, now.displayPollItemsData);
 }
 
-exports.buyItem = function(everyauth, listId, id, now) {
-    shopList.buyItemFromShopList(everyauth.google.user.id, listId, id, now.displayPollItemsData);
+exports.buyItem = function(everyauth, now, shopListId, itemId) {
+    shopList.buyItemFromShopList(everyauth.google.user.id, shopListId, itemId, now.displayPollItemsData);
 }
 
-exports.addCoOwner = function(everyauth, id, itemName, now) {
-    shopList.addCoOwnerForShopList(everyauth.google.user.id, id, itemName, now.displayPollItemsData);
+exports.addCoOwner = function(everyauth, now, shopListId, coOwnerId) {
+    shopList.addCoOwnerForShopList(everyauth.google.user.id, shopListId, coOwnerId, now.displayPollItemsData);
 }
 
-exports.deleteCoOwner = function(everyauth, listId, id, now) {
-    shopList.deleteCoOwnerFromShopList(everyauth.google.user.id, listId, id, now.displayPollItemsData);
+exports.deleteCoOwner = function(everyauth, now, shopListId, coOwnerId) {
+    shopList.deleteCoOwnerFromShopList(everyauth.google.user.id, shopListId, coOwnerId, now.displayPollItemsData);
 }
