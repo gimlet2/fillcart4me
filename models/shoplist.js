@@ -30,7 +30,7 @@ exports.getShopList = function(userId, shopListId, callBack, failBack) {
                 ],
                 _id: shopListId},
             function(error, result) {
-                isShopListFound(error, result, function() {
+                isShopListFound(result, function() {
                     callBack(result);
                 }, failBack);
             });
@@ -44,7 +44,7 @@ exports.getShopListsForUser = function(userId, callBack) {
                 ] }
             , ['_id', 'name', 'owner'])
             .exec(function(error, result) {
-                isShopListFound(error, result, callBack);
+                isShopListFound(result, callBack);
             });
 }
 
@@ -117,6 +117,6 @@ isShopListFound = function(shopList, callBack, failBack) {
         console.error('shopList not found');
         failBack();
     } else {
-        callBack();
+        callBack(shopList);
     }
 }
