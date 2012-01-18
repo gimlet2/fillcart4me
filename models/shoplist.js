@@ -15,13 +15,6 @@ var ShopList = exports = module.exports = new Schema({
 
 var ShopListModel = exports.model = mongoose.model('ShopList', ShopList);
 
-checkError = function(error, data, callBack) {
-    callBack(data);
-    if (error != null) {
-        console.error(error);
-    }
-}
-
 exports.getShopList = function(userId, shopListId, callBack, failBack) {
     ShopListModel.findOne({
                 $or:[
