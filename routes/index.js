@@ -2,7 +2,11 @@
  * GET home page.
  */
 var shopList = require('../models/shoplist.js');
+var user = require('../models/user.js');
 
+exports.authUser = function(user) {
+
+}
 
 exports.index = function(req, res) {
     if (req.session.auth && req.session.auth.loggedIn) {
@@ -50,9 +54,9 @@ exports.buyItem = function(everyauth, now, shopListId, itemId) {
 }
 
 exports.addCoOwner = function(everyauth, now, shopListId, coOwnerId) {
-    shopList.addCoOwnerForShopList(everyauth.google.user.id, shopListId, coOwnerId, now.displayPollItemsData);
+    shopList.addCoOwnerForShopList(everyauth.google.user.id, shopListId, coOwnerId, now.displayPollData);
 }
 
 exports.deleteCoOwner = function(everyauth, now, shopListId, coOwnerId) {
-    shopList.deleteCoOwnerFromShopList(everyauth.google.user.id, shopListId, coOwnerId, now.displayPollItemsData);
+    shopList.deleteCoOwnerFromShopList(everyauth.google.user.id, shopListId, coOwnerId, now.displayPollData);
 }

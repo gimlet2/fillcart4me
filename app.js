@@ -8,7 +8,8 @@ var express = require('express')
         , now = require("now")
         ;
 
-everyauth.debug = true;
+// auth config
+everyauth.debug = false;
 
 var usersById = {};
 var nextUserId = 0;
@@ -38,18 +39,12 @@ everyauth.google.scope('https://www.google.com/m8/feeds/')
         })
         .redirectPath('/');
 
-everyauth
-        .facebook
-        .appId("297137990339090")
-        .appSecret("aca151877e0721b37733ea8868b75962")
-        .findOrCreateUser(function (session, accessToken, accessTokenExtra, fbUserMetadata) {
-            return usersByFbId[fbUserMetadata.id] ||
-                    (usersByFbId[fbUserMetadata.id] = addUser('facebook', fbUserMetadata));
-        })
-        .redirectPath('/');
+// session config
 
 var sessionSecret = 'GFTYUrtyfygfT^&**uyhgiugiuyg67fyt';
-var sessionStore = new express.session.MemoryStore;
+var sessionStore = new express.session.MemoryStore; // TODO add RedisStore
+
+// express config
 
 var app = module.exports = express.createServer(
         express.cookieParser(),

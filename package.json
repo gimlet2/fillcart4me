@@ -1,13 +1,14 @@
 {
-    "name": "consuming"
-  , "version": "0.0.2"
-  , "private": true
-  , "dependencies": {
-      "express": "2.5.2"
-    , "ejs": "*"
-    , "mongoose": "*"
-    , "connect-form": "*"
-    , "now": "*"
-    , "everyauth": "0.2.27"
-  }
+    "name": "fillcart4me",
+    "version": "0.0.3",
+    "private": true,
+    "dependencies": {
+        "express": "2.5.2",
+        "ejs": "*",
+        "mongoose": "*",
+        "connect-form": "*",
+        "now": "*",
+        "everyauth": "0.2.27",
+        "emailjs": "*"
+    }
 }

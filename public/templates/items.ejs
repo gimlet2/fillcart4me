@@ -1,16 +1,18 @@
-      {{ if (itemLists != null && itemLists.length) { }}
-		<table class="bordered-table" style="width: 500px;">
+{{ if (itemLists != null && itemLists.length) { }}
+<table class="bordered-table" style="width: 500px;">
 
-          {{ itemLists.forEach(function(itemList){ }}
-			<tr>	
-				<td style="{{ if(itemList.isBought) { }} background-color: #A9DBA9; {{ } }}">{{= itemList.name }}</td>
-            	<td style="width: 160px; text-align: center;">
-            	
-            	<a href="#" class="btn primary {{ if(itemList.isBought) { }} disabled {{ } }}" data-loading-text="buing!" onclick="buyItem(this, '{{= listId }}', '{{= itemList._id }}');">Buy</a>
-            	
-		        <a href="#" class="btn" data-loading-text="deleting..." onclick="deleteItem(this, '{{= listId }}', '{{= itemList._id }}');">Delete</a>
-            	</td>
-            </li>
-          {{ }) }}
-	</table>
-      {{ } }}
+    {{ itemLists.forEach(function(itemList){ }}
+    <tr>
+        <td style="{{ if(itemList.isBought) { }} background-color: #A9DBA9; {{ } }}">{{= itemList.name }}</td>
+        <td style="width: 160px; text-align: center;">
+
+            <a href="#" class="btn primary {{ if(itemList.isBought) { }} disabled {{ } }}" data-loading-text="buing!"
+               onclick="buyItem(this, '{{= listId }}', '{{= itemList._id }}');">Buy</a>
+
+            <a href="#" class="btn" data-loading-text="deleting..."
+               onclick="deleteItem(this, '{{= listId }}', '{{= itemList._id }}');">Delete</a>
+        </td>
+    </li>
+    {{ }) }}
+</table>
+        {{ } }}
