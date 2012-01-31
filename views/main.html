@@ -96,7 +96,7 @@
             document.url = document.url + "#" + id;
         }
 
-        now.ready(function() {
+        //now.ready(function() {
             <%
             if (!everyauth.loggedIn) { %>
 
@@ -115,7 +115,7 @@
             <%
             }
             %>
-        });
+        //});
 
         function onAddTag(tag) {
             if (!$('#coOwners').tagExist(tag)) {
