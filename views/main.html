@@ -13,11 +13,11 @@
     <script src="/javascripts/bootstrap-alerts.js" type="text/javascript"></script>
     <script src="/javascripts/jquerytagsinput.js" type="text/javascript"></script>
     <script src="/javascripts/ejs.min.js"></script>
-    <script id="shopList" type="text/template">
-        <%- partial('list.ejs') %>
+    <script id="shopList" type="text/template" src="/templates/list.ejs">
+        <%- partial('../public/templates/list.ejs') %>
     </script>
     <script id="itemList" type="text/template" src="/templates/items.ejs">
-        <%- partial('items.ejs') %>
+        <%- partial('../public/templates/items.ejs') %>
     </script>
     <script type="text/javascript">
         var ejs = require('ejs');
@@ -96,7 +96,7 @@
             document.url = document.url + "#" + id;
         }
 
-        //now.ready(function() {
+        now.ready(function() {
             <%
             if (!everyauth.loggedIn) { %>
 
@@ -111,11 +111,11 @@
                     });
                     $("#coOwners").tagsInput({onAddTag:onAddTag,onRemoveTag:onRemoveTag, defaultText: "add user"});
                 }
-                now.getShopLists();
+               // now.getShopLists();
             <%
             }
             %>
-        //});
+        });
 
         function onAddTag(tag) {
             if (!$('#coOwners').tagExist(tag)) {

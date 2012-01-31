@@ -14,7 +14,14 @@
 </div>
 <div class="row show-grid">
     <div class="span9">
-        <div id="lists"></div>
+        <div id="lists">
+            <% if (preloadShopLists) {
+                %>
+            <%- partial('list.ejs', {preloadShopLists: preloadShopLists}) %>
+            <%
+            } %>
+
+        </div>
     </div>
     <div class="span5" id="coOwnersDiv" style="display: none;">
         <h5>Enter users you want to share:</h5>
