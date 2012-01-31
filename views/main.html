@@ -3,11 +3,11 @@
 <head>
     <title>FillCartForMe - <%= title %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="google-site-verification" content="aEyh4aSpjZ8mRNqstUsatngLuAXWwLR9W66inTsf5w4" />
+    <meta name="google-site-verification" content="aEyh4aSpjZ8mRNqstUsatngLuAXWwLR9W66inTsf5w4"/>
+    <script src="/nowjs/now.js" type="text/javascript"></script>
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" type="text/css">
     <link href="/stylesheets/style.css" rel="stylesheet" type="text/css"/>
     <link href="/stylesheets/jquerytagsinput.css" rel="stylesheet" type="text/css"/>
-    <script src="/nowjs/now.js" type="text/javascript"></script>
     <script src="/javascripts/jquery.min.js" type="text/javascript"></script>
     <script src="/javascripts/bootstrap-buttons.js" type="text/javascript"></script>
     <script src="/javascripts/bootstrap-alerts.js" type="text/javascript"></script>
@@ -41,18 +41,18 @@
         }
 
 
-        now.displayPollData = function(list) {
+        now.displayPollData = function (list) {
             var shop = document.getElementById('shopList').innerHTML;
-            var html = ejs.render(shop, { shopLists: list });
+            var html = ejs.render(shop, { shopLists:list });
             $("#lists").html(html);
         }
 
-        now.displayPollItemsData = function(list) {
+        now.displayPollItemsData = function (list) {
             var items = document.getElementById('itemList').innerHTML;
-            var html = ejs.render(items, { itemLists: list.items, listId: list._id });
+            var html = ejs.render(items, { itemLists:list.items, listId:list._id });
             $("#lists").html(html);
             $("#coOwners").importTags('');
-            $(list.coOwners).each(function(n, e) {
+            $(list.coOwners).each(function (n, e) {
                 $("#coOwners").addTag(e, {callback:false});
             });
 
@@ -60,7 +60,9 @@
 
         function deleteList(button, id) {
             $(button).button('loading');
-            now.deleteShopList(id);
+            now.ready(function () {
+                now.deleteShopList(id);
+            });
             $(button).button('reset');
         }
 
@@ -82,11 +84,11 @@
             $("#shopListNameDiv").html("<h2>" + name + "</h2");
             $("#newElementLabel").html("New item:");
             $("#coOwnersDiv").show();
-            $("#addShopListButton").unbind('click').click(function() {
+            $("#addShopListButton").unbind('click').click(function () {
                 addItemList(id);
             });
-            $("#xlInput").unbind('keypress').bind('keypress', function(e) {
-                        onEnterPress(e, function() {
+            $("#xlInput").unbind('keypress').bind('keypress', function (e) {
+                        onEnterPress(e, function () {
                             addItemList(id);
                         });
                     }
@@ -96,7 +98,7 @@
             document.url = document.url + "#" + id;
         }
 
-        now.ready(function() {
+        now.ready(function () {
             <%
             if (!everyauth.loggedIn) { %>
 
@@ -106,12 +108,12 @@
                 if (!initDone) {
                     initDone = true;
                     $("#addShopListButton").click(addShopList);
-                    $("#xlInput").keypress(function(e) {
+                    $("#xlInput").keypress(function (e) {
                         onEnterPress(e, addShopList);
                     });
-                    $("#coOwners").tagsInput({onAddTag:onAddTag,onRemoveTag:onRemoveTag, defaultText: "add user"});
+                    $("#coOwners").tagsInput({onAddTag:onAddTag, onRemoveTag:onRemoveTag, defaultText:"add user"});
                 }
-               // now.getShopLists();
+                // now.getShopLists();
             <%
             }
             %>
@@ -133,9 +135,9 @@
             }
         }
 
-        window.addEventListener('load', function(e) {
+        window.addEventListener('load', function (e) {
 
-            window.applicationCache.addEventListener('updateready', function(e) {
+            window.applicationCache.addEventListener('updateready', function (e) {
                 if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
                     // Browser downloaded a new app cache.
                     // Swap it in and reload the page to get the new hotness.
@@ -194,7 +196,7 @@
     _gaq.push(['_setAccount', 'UA-28373659-1']);
     _gaq.push(['_trackPageview']);
 
-    (function() {
+    (function () {
         var ga = document.createElement('script');
         ga.type = 'text/javascript';
         ga.async = true;
