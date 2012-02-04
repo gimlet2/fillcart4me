@@ -7,7 +7,8 @@
         "ejs": "*",
         "mongoose": "*",
         "connect-form": "*",
-        "now": "*",
+        "socket.io": "*",
+        "dnode-session": "*",
         "everyauth": "0.2.27",
         "emailjs": "*"
     }

@@ -4,7 +4,7 @@
     <title>FillCartForMe - <%= title %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="google-site-verification" content="aEyh4aSpjZ8mRNqstUsatngLuAXWwLR9W66inTsf5w4"/>
-    <script src="/nowjs/now.js" type="text/javascript"></script>
+    <script src="/socket.io/socket.io.js"></script>
 
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" type="text/css">
     <link href="/stylesheets/style.css" rel="stylesheet" type="text/css"/>
@@ -23,43 +23,41 @@
     <script type="text/javascript">
 
         var ejs = require('ejs');
+        var socket;
         ejs.open = '{{';
         ejs.close = '}}';
         var shop;
         var shopListId;
         var initDone = false;
-        function addShopList() {
-            $('#addShopListButton').button('loading');
-            now.addShopList($('#xlInput').val());
-            $('#addShopListButton').button('reset');
-            $('#xlInput').val("");
+
+        function showShopLists(list) {
+            var shop = document.getElementById('shopList').innerHTML;
+            var html = ejs.render(shop, { shopLists:JSON.parse(list) });
+            $("#lists").html(html);
         }
 
-        function addItemList(id) {
+        function showShopList(list) {
+            var items = document.getElementById('itemList').innerHTML;
+            var html = ejs.render(items, { itemLists:list.items, listId:list._id });
+            $("#lists").html(html);
+            $("#coOwners").importTags('');
+            $(list.coOwners).each(function (n, e) {
+                $("#coOwners").addTag(e, {callback:false});
+            });
+
+        }
+
+        function addShopList() {
             $('#addShopListButton').button('loading');
-            now.addItem(id, $("#xlInput").val());
+            socket.emit("addShopList", {shopListName:($('#xlInput').val())});
             $('#addShopListButton').button('reset');
             $('#xlInput').val("");
         }
 
         function deleteList(button, id) {
             $(button).button('loading');
-            now.ready(function () {
-                now.deleteShopList(id);
-            });
+            socket.emit("deleteShopList", {shopListId:id});
             $(button).button('reset');
-        }
-
-        function deleteItem(button, listId, id) {
-            $(button).button('loading');
-            now.deleteItem(listId, id);
-            $(button).button('reset');
-        }
-
-        function buyItem(button, listId, id) {
-            $(this).button('loading');
-            now.buyItem(listId, id);
-            $(this).button('reset');
         }
 
         function goShopWithList(button, id, name) {
@@ -77,39 +75,38 @@
                         });
                     }
             );
-            now.getShopList(id);
+            socket.emit("getShopList", {shopListId:id});
             $(button).button('reset');
             document.url = document.url + "#" + id;
         }
 
-        now.ready(function () {
-            <%
-            if (!everyauth.loggedIn) { %>
+        function addItemList(id) {
+            $('#addShopListButton').button('loading');
+            socket.emit("addItem", {shopListId:id, itemName:$("#xlInput").val()});
+            $('#addShopListButton').button('reset');
+            $('#xlInput').val("");
+        }
 
-            <%
-            } else { %>
+        function deleteItem(button, listId, id) {
+            $(button).button('loading');
+            socket.emit("deleteItem", {shopListId:listId, itemId:id});
+            $(button).button('reset');
+        }
 
-                if (!initDone) {
-                    initDone = true;
-                    $("#addShopListButton").click(addShopList);
-                    $("#xlInput").keypress(function (e) {
-                        onEnterPress(e, addShopList);
-                    });
-                    $("#coOwners").tagsInput({onAddTag:onAddTag, onRemoveTag:onRemoveTag, defaultText:"add user"});
-                }
-                // now.getShopLists();
-            <%
-            }
-            %>
-        });
+        function buyItem(button, listId, id) {
+            $(this).button('loading');
+            socket.emit("buyItem", {shopListId:listId, itemId:id});
+            $(this).button('reset');
+        }
+
 
         function onAddTag(tag) {
             if (!$('#coOwners').tagExist(tag)) {
-                now.addCoOwner(shopListId, tag);
+                socket.emit("addCoOwner", {shopListId:shopListId, coOwnerId:tag});
             }
         }
         function onRemoveTag(tag) {
-            now.deleteCoOwner(shopListId, tag);
+            socket.emit("deleteCoOwner", {shopListId:shopListId, coOwnerId:tag});
         }
 
         function onEnterPress(e, call) {
@@ -119,41 +116,19 @@
             }
         }
 
-        window.addEventListener('load', function (e) {
-
-            window.applicationCache.addEventListener('updateready', function (e) {
-                if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-                    // Browser downloaded a new app cache.
-                    // Swap it in and reload the page to get the new hotness.
-                    window.applicationCache.swapCache();
-
-                    window.location.reload();
-
-                } else {
-                    // Manifest didn't changed. Nothing new to server.
-                }
-            }, false);
-
-        }, false);
-
         $(document).ready(function () {
-            now.displayPollData = function (list) {
-                var shop = document.getElementById('shopList').innerHTML;
-                var html = ejs.render(shop, { shopLists:list });
-                $("#lists").html(html);
-            }
+            socket = io.connect('http://localhost');
+            socket.on("refreshShopLists", function (data) {
+                showShopLists(data.list);
+            });
+            socket.on("refreshShopList", function (data) {
+                showShopList(data.list);
+            });
+            socket.on("newShopListShared", function (data) {
 
-            now.displayPollItemsData = function (list) {
-                var items = document.getElementById('itemList').innerHTML;
-                var html = ejs.render(items, { itemLists:list.items, listId:list._id });
-                $("#lists").html(html);
-                $("#coOwners").importTags('');
-                $(list.coOwners).each(function (n, e) {
-                    $("#coOwners").addTag(e, {callback:false});
-                });
-
-            }
-
+            });
+            $("#addShopListButton").click(addShopList);
+            $("#coOwners").tagsInput({onAddTag:onAddTag, onRemoveTag:onRemoveTag, defaultText:"add user"});
         });
 
     </script>

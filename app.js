@@ -5,8 +5,10 @@
 var express = require('express')
         , routes = require('./routes')
         , everyauth = require('everyauth')
-        , now = require("now")
-        ;
+        , io = require('socket.io')
+        , Session = require('connect').middleware.session.Session
+        , parseCookie = require('connect').utils.parseCookie;
+
 
 // auth config
 everyauth.debug = false;
@@ -23,7 +25,7 @@ function addUser(source, sourceUser) {
         user.id = ++nextUserId;
         return usersById[nextUserId] = user;
     } else { // non-password-based
-        user = usersById[++nextUserId] = {id: nextUserId};
+        user = usersById[++nextUserId] = {id:nextUserId};
         user[source] = sourceUser;
     }
     return user;
@@ -48,13 +50,13 @@ var sessionStore = new express.session.MemoryStore; // TODO add RedisStore
 
 var app = module.exports = express.createServer(
         express.cookieParser(),
-        express.session({ secret: sessionSecret, store: sessionStore  })
+        express.session({ secret:sessionSecret, store:sessionStore, key:'express.sid'  })
 );
-var everyone = now.initialize(app);
+//var everyone = now.initialize(app);
 
 app.register('html', require('ejs'));
 
-app.configure(function() {
+app.configure(function () {
     app.set('views', __dirname + '/views');
     app.set('view engine', 'html');
     app.use(express.bodyParser());
@@ -71,13 +73,13 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/consuming');
 
 // Configuration
-app.configure('development', function() {
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+app.configure('development', function () {
+    app.use(express.errorHandler({ dumpExceptions:true, showStack:true }));
     everyauth.google.appId('198255835595-o7t2gcjkqna9qe093rg6462t2l2hlugr.apps.googleusercontent.com')
             .appSecret('0ibrNhrLb5D27bOMzVXH3YFG')
 });
 
-app.configure('production', function() {
+app.configure('production', function () {
     app.use(express.errorHandler());
     everyauth.google.appId('198255835595.apps.googleusercontent.com')
             .appSecret('gpAeYLUaZWQxklj3oe4sUPwC').myHostname("http://fillcart4.me")
@@ -91,81 +93,96 @@ app.get('/', routes.index);
 app.get('/about', routes.about);
 
 
-everyone.now.addShopList = function(shopListName) {
-    loadSession(this, function(auth, now) {
-        routes.addShopList(auth, now, shopListName);
-    });
-}
-
-everyone.now.deleteShopList = function(shopListId) {
-    loadSession(this, function(auth, now) {
-        routes.deleteShopList(auth, now, shopListId);
-    });
-}
-
-everyone.now.getShopLists = function() {
-    loadSession(this, function(auth, now) {
-        routes.getShopLists(auth, now);
-    });
-}
-
-everyone.now.getShopList = function(shopListId) {
-    loadSession(this, function(auth, now) {
-        routes.getShopList(auth, now, shopListId);
-    }, shopListId);
-}
-
-everyone.now.addItem = function(shopListId, itemName) {
-    loadSession(this, function(auth, now) {
-        routes.addItem(auth, now, shopListId, itemName);
-    }, shopListId);
-
-}
-
-everyone.now.deleteItem = function(shopListId, itemId) {
-    loadSession(this, function(auth, now) {
-        routes.deleteItem(auth, now, shopListId, itemId);
-    }, shopListId);
-}
-
-everyone.now.buyItem = function(shopListId, itemId) {
-    loadSession(this, function(auth, now) {
-        routes.buyItem(auth, now, shopListId, itemId);
-    }, shopListId);
-}
-
-everyone.now.addCoOwner = function(shopListId, coOwnerId) {
-    loadSession(this, function(auth, now) {
-        routes.addCoOwner(auth, now, shopListId, coOwnerId);
-    }, shopListId);
-
-}
-
-everyone.now.deleteCoOwner = function(shopListId, coOwnerId) {
-    loadSession(this, function(auth, now) {
-        routes.deleteCoOwner(auth, now, shopListId, coOwnerId);
-    }, shopListId);
-}
+//
+//everyone.now.addCoOwner = function (shopListId, coOwnerId) {
+//    loadSession(this, function (auth, now) {
+//        routes.addCoOwner(auth, now, shopListId, coOwnerId);
+//    }, shopListId);
+//
+//}
+//
+//everyone.now.deleteCoOwner = function (shopListId, coOwnerId) {
+//    loadSession(this, function (auth, now) {
+//        routes.deleteCoOwner(auth, now, shopListId, coOwnerId);
+//    }, shopListId);
+//}
 
 
 app.listen(3020);
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
-
-
-loadSession = function(context, callBack, groupId) {
-    var connectId = unescape(context.user.cookie['connect.sid']);
-    var clientId = context.user.clientId;
-    sessionStore.load(connectId, function(err, res) {
-        if (groupId == null) {
-            group = now.getGroup(res.auth.google.user.id);
-        } else {
-            group = now.getGroup(groupId);
-        }
-        group.hasClient(connectId, function (bool) {
-            if (!bool) {
-                group.addUser(clientId);
+var sio = io.listen(app);
+sio.set('authorization', function (data, accept) {
+    if (data.headers.cookie) {
+        data.cookie = parseCookie(data.headers.cookie);
+        data.sessionID = data.cookie['express.sid'];
+        // save the session store to the data object
+        // (as required by the Session constructor)
+        data.sessionStore = sessionStore;
+        sessionStore.get(data.sessionID, function (err, session) {
+            if (err || !session) {
+                accept('Error', false);
+            } else {
+                // create a session object, passing data as request and our
+                // just acquired session data
+                data.session = new Session(data, session);
+                accept(null, true);
             }
         });
-        callBack(res.auth, group.now);
+    } else {
+        return accept('No cookie transmitted.', false);
+    }
+});
+
+
+sio.sockets.on('connection', function (socket) {
+    if (socket.handshake.session.auth != null) {
+        socket.join(socket.handshake.session.auth.google.user.id);
+    }
+
+    var refreshShopLists = function (resp) {
+        socket.emit("refreshShopLists", {list:resp});
+    };
+    var refreshShopListsForUser = function (resp, userId) {
+        sio.sockets.in(userId).emit("newShopListShared", {list:resp});
+    };
+    var refreshShopList = function (resp) {
+        socket.emit("refreshShopList", {list:resp});
+        socket.broadcast.to(resp._doc._id.__id).emit("refreshShopList", {list:resp});
+    };
+
+    socket.on('addShopList', function (data) {
+        routes.addShopList(socket.handshake.session.auth, refreshShopLists, data.shopListName);
     });
-}
+    socket.on('deleteShopList', function (data) {
+        routes.deleteShopList(socket.handshake.session.auth, refreshShopLists, data.shopListId);
+    });
+    socket.on('getShopLists', function () {
+        routes.getShopLists(socket.handshake.session.auth, refreshShopLists);
+    });
+    socket.on('getShopList', function (data) {
+        socket.join(data.shopListId);
+        routes.getShopList(socket.handshake.session.auth, refreshShopList, refreshShopLists, data.shopListId);
+    });
+    socket.on('addItem', function (data) {
+        routes.addItem(socket.handshake.session.auth, refreshShopList, data.shopListId, data.itemName);
+    });
+    socket.on('deleteItem', function (data) {
+        routes.deleteItem(socket.handshake.session.auth, refreshShopList, data.shopListId, data.itemId);
+    });
+    socket.on('buyItem', function (data) {
+        routes.buyItem(socket.handshake.session.auth, refreshShopList, data.shopListId, data.itemId);
+    });
+    socket.on('addCoOwner', function (data) {
+        routes.addCoOwner(socket.handshake.session.auth, function (resp) {
+            refreshShopListsForUser(resp, data.coOwnerId);
+        }, data.shopListId, data.coOwnerId);
+    });
+    socket.on('deleteCoOwner', function (data) {
+        routes.deleteCoOwner(socket.handshake.session.auth, function (resp) {
+            refreshShopListsForUser(resp, data.coOwnerId);
+        }, data.shopListId, data.coOwnerId);
+    });
+
+});
+
+console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+
