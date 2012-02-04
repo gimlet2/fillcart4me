@@ -1,15 +1,15 @@
 {
-    "name": "fillcart4me",
-    "version": "0.0.3",
-    "private": true,
-    "dependencies": {
-        "express": "2.5.2",
-        "ejs": "*",
-        "mongoose": "*",
-        "connect-form": "*",
-        "socket.io": "*",
-        "dnode-session": "*",
-        "everyauth": "0.2.27",
-        "emailjs": "*"
+    "name":"fillcart4me",
+    "version":"0.0.3",
+    "private":true,
+    "dependencies":{
+        "express":"2.5.2",
+        "connect":"*",
+        "ejs":"*",
+        "mongoose":"*",
+        "connect-form":"*",
+        "socket.io":"*",
+        "everyauth":"0.2.27",
+        "emailjs":"*"
     }
 }
