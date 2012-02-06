@@ -1,10 +1,10 @@
 {{ if (itemLists != null && itemLists.length) { }}
-<table class="bordered-table" style="width: 430px;">
+<table class="bordered-table" style="min-width: 230px;">
 
     {{ itemLists.forEach(function(itemList){ }}
     <tr>
         <td style="{{ if(itemList.isBought) { }} background-color: #A9DBA9; {{ } }}">{{= itemList.name }}</td>
-        <td style="width: 160px; text-align: center;">
+        <td style="width: 140px; text-align: center;">
 
             <a href="#" class="btn primary {{ if(itemList.isBought) { }} disabled {{ } }}" data-loading-text="buing!"
                onclick="buyItem(this, '{{= listId }}', '{{= itemList._id }}');">Buy</a>

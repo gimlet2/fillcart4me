@@ -1,11 +1,16 @@
 body {
     padding-top: 190px;
-    padding-left: 60px;
-    padding-right: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 html {
 
+}
+
+.topbar-inner {
+    padding-left: 10px;
+    padding-right: 30px;
 }
 
 .importantMenu {
@@ -32,8 +37,14 @@ html {
 }
 
 #lists {
-    width: 520px;
+    width: 420px;
     min-height: 1px;
+}
+
+#main {
+    margin-left: auto;
+    margin-right: auto;
+    width: 420px;;
 }
 
 

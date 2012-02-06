@@ -12,8 +12,6 @@
         <a href="#" id="addShopListButton" class="btn primary" data-loading-text="creating...">Add</a>
     </div>
 </div>
-<div class="row show-grid">
-    <div class="span9">
         <div id="lists">
             <% if (preloadShopLists) {
                 %>
@@ -22,12 +20,12 @@
             } %>
 
         </div>
-    </div>
-    <div class="span5" id="coOwnersDiv" style="display: none;">
+
+    <div class="span5" id="coOwnersDiv" style="display: none; float: left;">
         <h5>Enter users you want to share:</h5>
         <textarea id="coOwners"></textarea>
     </div>
-</div>
+
 
 
 <% } %>
