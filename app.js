@@ -92,22 +92,6 @@ everyauth.helpExpress(app);
 app.get('/', routes.index);
 app.get('/about', routes.about);
 
-
-//
-//everyone.now.addCoOwner = function (shopListId, coOwnerId) {
-//    loadSession(this, function (auth, now) {
-//        routes.addCoOwner(auth, now, shopListId, coOwnerId);
-//    }, shopListId);
-//
-//}
-//
-//everyone.now.deleteCoOwner = function (shopListId, coOwnerId) {
-//    loadSession(this, function (auth, now) {
-//        routes.deleteCoOwner(auth, now, shopListId, coOwnerId);
-//    }, shopListId);
-//}
-
-
 app.listen(3020);
 var sio = io.listen(app);
 sio.set('authorization', function (data, accept) {

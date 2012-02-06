@@ -117,8 +117,17 @@
         }
 
         $(document).ready(function () {
-            socket = io.connect('http://fillcart4.me');
-//            socket = io.connect('http://localhost');
+            <%
+            if (app.settings.env == 'development') {
+            %>
+                socket = io.connect('http://localhost');
+            <%
+            } else {
+            %>
+                socket = io.connect('http://fillcart4.me');
+            <%
+            }
+            %>
             socket.on("refreshShopLists", function (data) {
                 showShopLists(data.list);
             });
@@ -135,6 +144,7 @@
     </script>
 </head>
 <body>
+
 <div class="topbar" data-scrollspy="scrollspy" style="min-height: 180px;">
     <div class="topbar-inner" style="min-height: 180px;">
         <a class="brand" style="padding-left: 50px;" href="/"><img src="/images/logo.png"/></a><br/>
