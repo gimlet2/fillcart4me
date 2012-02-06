@@ -118,6 +118,7 @@
 
         $(document).ready(function () {
             socket = io.connect('http://fillcart4.me');
+//            socket = io.connect('http://localhost');
             socket.on("refreshShopLists", function (data) {
                 showShopLists(data.list);
             });
@@ -134,25 +135,24 @@
     </script>
 </head>
 <body>
-<div class="topbar" data-scrollspy="scrollspy">
-    <div class="topbar-inner">
-        <div class="container">
-            <a class="brand" href="/"><img src="/images/logo.png"/></a>
-            <ul class="nav">
-                <li><a href="/about">About</a></li>
-                <% if (!everyauth.loggedIn) { %>
-                <li class="importantMenu"><a href="/auth/google">Login with Google</a></li>
+<div class="topbar" data-scrollspy="scrollspy" style="min-height: 180px;">
+    <div class="topbar-inner" style="min-height: 180px;">
+        <a class="brand" style="padding-left: 50px;" href="/"><img src="/images/logo.png"/></a><br/>
+        <ul class="nav">
+            <li><a href="/about">About</a></li>
+            <% if (!everyauth.loggedIn) { %>
+            <li class="importantMenu"><a href="/auth/google">Login with Google</a></li>
 
-                <% } else { %>
+            <% } else { %>
 
-                <li><a href="#"><%= everyauth.google.user.id %></a></li>
-                <li><a href="/logout">logout</a></li>
-                <% } %>
-            </ul>
-        </div>
+            <li><a href="#"><%= everyauth.google.user.id %></a></li>
+            <li><a href="/logout">logout</a></li>
+            <% } %>
+        </ul>
+
     </div>
 </div>
-<div id="main" class="container">
+<div id="main">
     <div id="shopListNameDiv">
     </div>
     <%- body %>
@@ -160,13 +160,13 @@
 
 
 <footer class="footer">
-    <div class="container">
-        <p class="pull-right"><a href="#">Back to top</a></p>
 
-        <p>
-            2012 &copy; FillCart4.me dev team.
-        </p>
-    </div>
+    <p class="pull-right"><a href="#">Back to top</a></p>
+
+    <p>
+        2012 &copy; FillCart4.me dev team.
+    </p>
+
 </footer>
 
 <script type="text/javascript">
